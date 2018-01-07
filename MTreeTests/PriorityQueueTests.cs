@@ -22,7 +22,7 @@ namespace MTreeTests
 				var ret = queue.First();
 				Assert.Fail("First is not throwing an exception when empty.");
 			}
-			catch (InvalidOperationException e)
+			catch (InvalidOperationException)
 			{
 				// Exception correctly thrown
 			}
@@ -32,7 +32,7 @@ namespace MTreeTests
 				var ret = queue.Last();
 				Assert.Fail("Last is not throwing an exception when empty.");
 			}
-			catch (InvalidOperationException e)
+			catch (InvalidOperationException)
 			{
 				// Exception correctly thrown
 			}
@@ -48,7 +48,7 @@ namespace MTreeTests
 				var ret = maxQueue.First();
 				Assert.Fail("First is not throwing an exception when empty.");
 			}
-			catch (InvalidOperationException e)
+			catch (InvalidOperationException)
 			{
 				// Exception correctly thrown
 			}
@@ -58,7 +58,7 @@ namespace MTreeTests
 				var ret = maxQueue.Last();
 				Assert.Fail("Last is not throwing an exception when empty.");
 			}
-			catch (InvalidOperationException e)
+			catch (InvalidOperationException)
 			{
 				// Exception correctly thrown
 			}
@@ -151,6 +151,10 @@ namespace MTreeTests
 			{
 				e.Message.GetType(); // to stop the annoying errir that e is declared and never used
 			}
+			catch (Exception e)
+			{
+				Assert.Fail("Dequeue threw the wrong type of error. Message: " + e.Message);
+			}
 		}
 
 		[TestMethod]
@@ -203,6 +207,10 @@ namespace MTreeTests
 			{
 				e.Message.GetType(); // to stop the annoying errir that e is declared and never used
 			}
+			catch (Exception e)
+			{
+				Assert.Fail("Dequeue threw the wrong type of error. Message: " + e.Message);
+			}
 
 			// Insert elements out of order
 			for (int i = itemCount - 1; i >= 0; i--)
@@ -241,6 +249,10 @@ namespace MTreeTests
 			catch (InvalidOperationException e)
 			{
 				e.Message.GetType(); // to stop the annoying errir that e is declared and never used
+			}
+			catch (Exception e)
+			{
+				Assert.Fail("Dequeue threw the wrong type of error. Message: " + e.Message);
 			}
 		}
 

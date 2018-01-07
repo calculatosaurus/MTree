@@ -3,13 +3,11 @@ namespace MTree
 {
 	public class CartesianPoint
 	{
-		public int ID { get; private set; }
 		public double X { get; private set; }
 		public double Y { get; private set; }
 
-		public CartesianPoint(int id, double x, double y)
+		public CartesianPoint( double x, double y)
 		{
-			this.ID = id;
 			this.X = x;
 			this.Y = y;
 		}

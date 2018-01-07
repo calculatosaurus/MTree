@@ -11,8 +11,27 @@ namespace MTree
 		public Func<T, T, double> GetDistance;
 
 		public int MaxNodesSize { get; }
-		private int _numItems;
 		private int _nodeIDCounter;
+
+		/// <summary>
+		/// Gets the number of items the this MTree.
+		/// </summary>
+		/// <value>The count.</value>
+		public int Count { private set; get; }
+
+		/// <summary>
+		/// Gets the number of nodes in this MTree.
+		/// </summary>
+		/// <value>The node count.</value>
+		public int NodeCount
+		{
+			get
+			{
+				if (Root == null) return 0;
+
+				return Root.NodeCount;
+			}
+		}
 		#endregion
 
 
@@ -24,10 +43,7 @@ namespace MTree
 		/// <param name="DistanceFunction">The distance metric used to determine the "similarity"
 		/// of two item in the MTree.</param>
 		public MTree(Func<T, T, double> DistanceFunction)
-			: this(DistanceFunction, 25)
-        {
-            /* */
-        }
+			: this(DistanceFunction, 25) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:MTree.MTree`1"/> class with the given
@@ -48,37 +64,11 @@ namespace MTree
 			GetDistance = DistanceFunction;
 			MaxNodesSize = maxNodeSize;
 
-			int tempMinNodeSize = (int)Math.Ceiling(Math.Sqrt(MaxNodesSize));
-
-			_numItems = 0;
+			Count = 0;
 			_nodeIDCounter = 0;
 		}
 		#endregion
 
-		#region Properties
-		/// <summary>
-		/// Gets the number of items the this MTree.
-		/// </summary>
-		/// <value>The count.</value>
-		public int Count
-		{
-			get { return _numItems; }
-		}
-
-		/// <summary>
-		/// Gets the number of nodes in this MTree.
-		/// </summary>
-		/// <value>The node count.</value>
-		public int NodeCount
-		{
-			get
-			{
-				if (Root == null) return 0;
-
-				return Root.NodeCount;
-			}
-		}
-		#endregion
 
 		#region Misc Methods
 		/// <summary>
@@ -108,8 +98,6 @@ namespace MTree
 		/// <param name="newEntry">The item to be added to the MTree.</param>
 		public void Add(T newEntry)
 		{
-			_numItems++;
-
 			if (Root == null)
 			{
 				Root = new Node<T>(this, null, newEntry, 0, true, true);
@@ -117,6 +105,8 @@ namespace MTree
 
 			double distEntryToRoot = GetDistance(Root.Item, newEntry);
 			Root.AddItemToTree(newEntry, distEntryToRoot);
+
+			Count++;
 		}
 
 		/// <summary>

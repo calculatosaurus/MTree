@@ -6,28 +6,18 @@ namespace MTree.Models
 	{
 		internal T Item { get; }
         internal double DistanceToParent { set; get; }
-		private double _coveringRadius;
+		internal double CoveringRadius { private set; get; }
         
         internal MTreeObject(T item, double distToParent, double coveringRadius)
         {
             Item = item;
             DistanceToParent = distToParent;
-            _coveringRadius = coveringRadius;
+            CoveringRadius = coveringRadius;
         }
-
-        internal double CoveringRadius
-		{
-			get { return this._coveringRadius; }
-		}
-
-        internal void ResetCoveringRadius()
-		{
-			this._coveringRadius = 0;
-		}
 
         internal void ExpandCoveringRadius(double value)
 		{
-			_coveringRadius = Math.Max(CoveringRadius, value);
+			CoveringRadius = Math.Max(CoveringRadius, value);
 		}
 
         internal abstract bool Contains(T item);

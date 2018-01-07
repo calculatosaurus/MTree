@@ -11,7 +11,7 @@ namespace MTreeTests
 	{
 		public int SearchRadius = 250;
 		int KNeighbors = 50;
-		CartesianPoint TestOrigin = new CartesianPoint(-1, 0, 0);
+		CartesianPoint TestOrigin = new CartesianPoint(0, 0);
 		GeographicPoint TestLocation = new GeographicPoint(41.0, -88.1);
 		int numTestPoints = 5_000;
 		int[] testNodeSizes = { 5, 10, 25, 50, 100, 150 };
@@ -124,7 +124,7 @@ namespace MTreeTests
 				double x = TestOrigin.X + (xMod * yMultiplier);
 				double y = TestOrigin.Y + (yMod * yMultiplier);
 
-				testPoints.Add(new CartesianPoint(i, x, y));
+				testPoints.Add(new CartesianPoint(x, y));
 			}
 
 			return testPoints;

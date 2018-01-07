@@ -46,7 +46,7 @@ namespace MTreeTests
 			int maxNodes = 25;
 			double distThreshold = 1000;
 			Random rand = new Random();
-			CartesianPoint testPoint = new CartesianPoint(-1, 0, 0);
+			CartesianPoint testPoint = new CartesianPoint(0, 0);
 
 			MTree<CartesianPoint> tree = new MTree<CartesianPoint>(CartesianPoint.GetDistance, maxNodes);
 			List<CartesianPoint> itemsInThreshold = new List<CartesianPoint>();
@@ -64,7 +64,7 @@ namespace MTreeTests
 				double x = maxItems * xMultiplier * rand.NextDouble() * 0.05;
 				double y = maxItems * yMultiplier * rand.NextDouble() * 0.05;
 
-				newPoint = new CartesianPoint(i, x, y);
+				newPoint = new CartesianPoint(x, y);
 
 				tree.Add(newPoint);
 
@@ -98,7 +98,7 @@ namespace MTreeTests
 			int maxItems = 10000;
 			int k = 100;
 			Random rand = new Random();
-			CartesianPoint testPoint = new CartesianPoint(-1, 0, 0);
+			CartesianPoint testPoint = new CartesianPoint(0, 0);
 
 			MTree<CartesianPoint> tree = new MTree<CartesianPoint>(CartesianPoint.GetDistance);
 			PriorityQueue<CartesianPoint> kNeighbors = new PriorityQueue<CartesianPoint>(k);
@@ -116,7 +116,7 @@ namespace MTreeTests
 				double x = maxItems * xMultiplier * rand.NextDouble() * 0.05;
 				double y = maxItems * yMultiplier * rand.NextDouble() * 0.05;
 
-				newPoint = new CartesianPoint(i, x, y);
+				newPoint = new CartesianPoint(x, y);
 
 				tree.Add(newPoint);
 
@@ -163,7 +163,7 @@ namespace MTreeTests
 				double x = maxItems * xMultiplier * rand.NextDouble() * 0.05;
 				double y = maxItems * yMultiplier * rand.NextDouble() * 0.05;
 
-				newPoint = new CartesianPoint(i, x, y);
+				newPoint = new CartesianPoint(x, y);
 
 				tree.Add(newPoint);
 
@@ -176,7 +176,7 @@ namespace MTreeTests
 
 		private void NodeDescentAssert(Node<CartesianPoint> nodeToCheck, int level, int maxNodeSize)
 		{
-			string errorMsg = "\nLevel: " + level + "\nNodeID: " + nodeToCheck.NodeID + "\nNodeItemID: " + nodeToCheck.Item.ID + "\nCoveringRadius: " + nodeToCheck.CoveringRadius + "\n";
+			string errorMsg = "\nLevel: " + level + "\nNodeID: " + nodeToCheck.NodeID + "\nCoveringRadius: " + nodeToCheck.CoveringRadius + "\n";
 
 			if (nodeToCheck.IsRoot)
 			{
@@ -197,7 +197,7 @@ namespace MTreeTests
 			foreach (MTreeObject<CartesianPoint> child in nodeToCheck.Children)
 			{
 				childDist = nodeToCheck.Tree.GetDistance(nodeToCheck.Item, child.Item);
-				string errorMsg2 = errorMsg + "ChildItemID: " + child.Item.ID + "\nDistanceToParent: " + child.DistanceToParent + "\nReal Distance: " + childDist + "\nCoveringRadius: " + child.CoveringRadius + "\n";
+				string errorMsg2 = errorMsg + "\nDistanceToParent: " + child.DistanceToParent + "\nReal Distance: " + childDist + "\nCoveringRadius: " + child.CoveringRadius + "\n";
 
 				Assert.AreEqual(childDist, child.DistanceToParent, "Child of node does not have correct distance to parent." + errorMsg2);
 				Assert.IsTrue(childDist <= nodeToCheck.CoveringRadius, "Actual distance to parent is greater than node covering radius." + errorMsg2);
@@ -211,8 +211,6 @@ namespace MTreeTests
 				if (!nodeToCheck.IsLeaf)
 				{
 					Node<CartesianPoint> nextNode = child as Node<CartesianPoint>;
-
-					Assert.AreEqual(nodeToCheck.Item.ID, nextNode.Parent.Item.ID, "Child of node does not have this node as its parent.");
 
 					NodeDescentAssert(nextNode, level + 1, maxNodeSize);
 				}

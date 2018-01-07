@@ -2,13 +2,10 @@
 
 namespace MTree.Models
 {
-	internal class Entry<T> : MTreeObject<T>, IEquatable<Entry<T>>
+	internal sealed class Entry<T> : MTreeObject<T>, IEquatable<Entry<T>>
 	{
 		internal Entry(T item, double distToParent)
-			: base(item, distToParent, 0)
-		{
-			//
-		}
+			: base(item, distToParent, 0) { }
 
 		public bool Equals(Entry<T> entry)
 		{

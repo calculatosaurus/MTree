@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MTree.Models
 {
-	internal class Node<T> : MTreeObject<T>, IEquatable<Node<T>>
+	internal sealed class Node<T> : MTreeObject<T>, IEquatable<Node<T>>
 	{
         #region Properties
         internal MTree<T> Tree { get; }
@@ -13,24 +13,13 @@ namespace MTree.Models
 		internal int NodeID { get; }
 
 		internal Node<T> Parent { get; set; }
-  //      internal Node<T> Parent
-		//{
-		//	get { return _parent; }
-		//	set
-		//	{
-		//		double distToNewParent = Tree.GetDistance(value.Item, this.Item);
-		//		value.ExpandCoveringRadius(distToNewParent);
-		//		this.DistanceToParent = distToNewParent;
-		//		this._parent = value;
-		//	}
-		//}
 
 		private void SetNewParent(Node<T> value)
 		{
 			double distToNewParent = Tree.GetDistance(value.Item, this.Item);
 			value.ExpandCoveringRadius(distToNewParent);
-			this.DistanceToParent = distToNewParent;
-			this.Parent = value;
+			DistanceToParent = distToNewParent;
+			Parent = value;
 		}
 
         internal int NodeCount
@@ -49,6 +38,9 @@ namespace MTree.Models
 		}
 		#endregion
 
+
+
+
 		#region Constuctor
 		public Node(MTree<T> tree, Node<T> parent, T item, double distToParent, bool isRoot, bool isLeaf)
 			: base(item, distToParent, 0)
@@ -65,6 +57,9 @@ namespace MTree.Models
 		}
 		#endregion
 
+
+
+
 		#region Misc Methods
 		public bool Equals(Node<T> node)
 		{
@@ -77,26 +72,28 @@ namespace MTree.Models
         internal override bool Contains(T item)
 		{
 			for (int i = 0; i < Children.Count; i++)
-			{
-				if (Children[i].Contains(item)) return true;
-			}
-
+				if (Children[i].Contains(item))
+					return true;
+			
 			return false;
 		}
 		#endregion
 
+
+
+
 		#region Add Item
 		internal void AddItemToTree(T newItem, double distItemToParent)
 		{
-			if (this.IsLeaf)
+			if (IsLeaf)
 			{
-				this.AddChildToNode(new Entry<T>(newItem, distItemToParent), distItemToParent);
+				AddChildToNode(new Entry<T>(newItem, distItemToParent), distItemToParent);
 			}
 			else
 			{
 				/* Algorithm in original paper had two iterations through the Node's
 				 * children. Current implementation reduces it to a single
-				 * iteration, thus halving the number of distance calculations.
+				 * iteration, halving the number of distance calculations.
                  */
 
 				Node<T> nextNodeToDescend = null;
@@ -104,50 +101,46 @@ namespace MTree.Models
 				double distToCoveringRadOfNextNode = double.MaxValue;
 				bool newItemInNextNodeRadius = false;
 
-				for (int i = 0; i < this.Children.Count; i++)
+				for (int i = 0; i < Children.Count; i++)
 				{
-					double distItemToThisChild = Tree.GetDistance(this.Children[i].Item, newItem);
+					double distItemToThisChild = Tree.GetDistance(Children[i].Item, newItem);
 
-					if (distItemToThisChild <= this.Children[i].CoveringRadius)
+					if (distItemToThisChild <= Children[i].CoveringRadius)
 					{
 						if (newItemInNextNodeRadius)
 						{
 							if (distItemToThisChild < distToNextNode)
 							{
-								nextNodeToDescend = this.Children[i] as Node<T>;
+								nextNodeToDescend = Children[i] as Node<T>;
 								distToNextNode = distItemToThisChild;
 							}
 						}
 						else
 						{
 							newItemInNextNodeRadius = true;
-							nextNodeToDescend = this.Children[i] as Node<T>;
+							nextNodeToDescend = Children[i] as Node<T>;
 							distToNextNode = distItemToThisChild;
 						}
 					}
 					else if (!newItemInNextNodeRadius)
 					{
-						if (distItemToThisChild - this.Children[i].CoveringRadius < distToCoveringRadOfNextNode)
+						if (distItemToThisChild - Children[i].CoveringRadius < distToCoveringRadOfNextNode)
 						{
-							nextNodeToDescend = this.Children[i] as Node<T>;
+							nextNodeToDescend = Children[i] as Node<T>;
 							distToNextNode = distItemToThisChild;
-							distToCoveringRadOfNextNode = distItemToThisChild - this.Children[i].CoveringRadius;
+							distToCoveringRadOfNextNode = distItemToThisChild - Children[i].CoveringRadius;
 						}
 					}
 				}
 
 				if (!newItemInNextNodeRadius)
-				{
 					nextNodeToDescend.ExpandCoveringRadius(distToNextNode);
-				}
-
+				
 				nextNodeToDescend.AddItemToTree(newItem, distToNextNode);
 			}
 
-			if (this.Children.Count > this.Tree.MaxNodesSize)
-			{
+			if (Children.Count > Tree.MaxNodesSize)
 				SplitNode();
-			}
 
 		}
 
@@ -163,25 +156,22 @@ namespace MTree.Models
 			Node<T> newNode = newChild as Node<T>;
 
 			if (newNode != null)
-			{
-				//newNode.Parent = this;
 				newNode.SetNewParent(this);
-			}
+			
 		}
 		#endregion
+
 
 
 
 		#region Split Node
 		private void SplitNode()
 		{
-			Node<T> newNode2;
-
-			ChooseTwoNewReplacementNodes(out Node<T> newNode1, out newNode2);
+			ChooseTwoNewReplacementNodes(out Node<T> newNode1, out Node<T> newNode2);
 
 			PartitionThisNodesChildrenToNewNodes(newNode1, newNode2);
 
-			if (this.IsRoot)
+			if (IsRoot)
 				CreateNewRootNode(newNode1, newNode2);
 
 
@@ -191,7 +181,8 @@ namespace MTree.Models
 		}
 
 		private void ChooseTwoNewReplacementNodes(
-			out Node<T> newNode1, out Node<T> newNode2)
+			out Node<T> newNode1,
+			out Node<T> newNode2)
 		{
 			/* Uses M_LB_Dist method described in paper. This had the best trade
 			 * off between build time and search time when testing MTree with
@@ -201,8 +192,8 @@ namespace MTree.Models
 			MTreeObject<T> closestChild = Children[0];
 			double distToClosestChild = Children[0].DistanceToParent;
 
-			MTreeObject<T> farthestChild = Children[1];
-			double distToFarthestChild = Children[1].DistanceToParent;
+			MTreeObject<T> farthestChild = closestChild;
+			double distToFarthestChild = distToClosestChild;
 
 			for (int i = 0; i < Children.Count; i++)
 			{
@@ -211,6 +202,7 @@ namespace MTree.Models
 					distToClosestChild = Children[i].DistanceToParent;
 					closestChild = Children[i];
 				}
+
 				if (Children[i].DistanceToParent > distToFarthestChild)
 				{
 					distToFarthestChild = Children[i].DistanceToParent;
@@ -236,7 +228,7 @@ namespace MTree.Models
 			for (int i = 0; i < Children.Count; i++)
 			{
 				double distChildToNewNode1 = Tree.GetDistance(newNode1.Item, Children[i].Item);
-				double distChildToNewNode2 = Tree.GetDistance(newNode2.Item, this.Children[i].Item);
+				double distChildToNewNode2 = Tree.GetDistance(newNode2.Item, Children[i].Item);
 
 				if (distChildToNewNode1 < distChildToNewNode2)
 					newNode1.AddChildToNode(Children[i], distChildToNewNode1);
@@ -255,14 +247,14 @@ namespace MTree.Models
 				newRootData = newNode2.Item;
 
 			Tree.Root = new Node<T>(Tree, null, newRootData, 0, true, false);
-			//newNode1.Parent = Tree.Root;
 			newNode1.SetNewParent(Tree.Root);
-			//newNode2.Parent = Tree.Root;
 			newNode2.SetNewParent(Tree.Root);
-			//this.Parent = Tree.Root;
-			this.SetNewParent(Tree.Root);
+			SetNewParent(Tree.Root);
 		}
 		#endregion
+
+
+
 
 		#region Range Search
 		public void RangeSearch(T item, double radius, double distItemToNode, List<T> neighbors)
@@ -303,6 +295,9 @@ namespace MTree.Models
 		}
 		#endregion
 
+
+
+
 		#region K Nearest Neighbor Search
 		public void NodeSearch(T item, double distItemToNode, PriorityQueue<Node<T>> nodesToCheck, PriorityQueue<T> elementsToReturn)
 		{
@@ -340,9 +335,9 @@ namespace MTree.Models
 						nodesToCheck.Enqueue(Children[i] as Node<T>, dMin);
 
 						/* Original paper had code that inserted null elements into the return list
-                            * without any explanation. This resulted in odd behavior. Through testing it
-                            * was found that this wasn't necessary for KNN search to work properly.
-                            */
+						 * without any explanation. This resulted in odd behavior. Through testing it
+						 * was found that this wasn't necessary for KNN search to work properly.
+						 */
 					}
 					
 				}
