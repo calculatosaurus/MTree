@@ -2,7 +2,7 @@
 
 namespace MTree.Models
 {
-	internal sealed class Entry<T> : MTreeObject<T>, IEquatable<Entry<T>>
+	internal sealed class Entry<T> : MTreeElement<T>, IEquatable<Entry<T>>
 	{
 		internal Entry(T item, double distToParent)
 			: base(item, distToParent, 0) { }

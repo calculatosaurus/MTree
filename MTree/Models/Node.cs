@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace MTree.Models
 {
-	internal sealed class Node<T> : MTreeObject<T>, IEquatable<Node<T>>
+	internal sealed class Node<T> : MTreeElement<T>, IEquatable<Node<T>>
 	{
-        #region Properties
-        internal MTree<T> Tree { get; }
+		#region Properties
+		internal MTree<T> Tree { get; }
 		internal bool IsRoot { get; set; }
 		internal bool IsLeaf { get; }
-		internal List<MTreeObject<T>> Children { get; }
+		internal List<MTreeElement<T>> Children { get; }
 		internal int NodeID { get; }
 
 		internal Node<T> Parent { get; set; }
@@ -22,7 +22,7 @@ namespace MTree.Models
 			Parent = value;
 		}
 
-        internal int NodeCount
+		internal int NodeCount
 		{
 			get
 			{
@@ -53,7 +53,7 @@ namespace MTree.Models
 
 			NodeID = tree.NewNodeID();
 
-			Children = new List<MTreeObject<T>>(tree.MaxNodesSize + 1);
+			Children = new List<MTreeElement<T>>(tree.MaxNodesSize + 1);
 		}
 		#endregion
 
@@ -144,7 +144,7 @@ namespace MTree.Models
 
 		}
 
-		private void AddChildToNode(MTreeObject<T> newChild, double newChildDist)
+		private void AddChildToNode(MTreeElement<T> newChild, double newChildDist)
 		{
 			newChild.DistanceToParent = newChildDist;
 			Children.Add(newChild);
@@ -180,19 +180,17 @@ namespace MTree.Models
 			Parent.AddChildToNode(newNode2, Tree.GetDistance(Parent.Item, newNode2.Item));
 		}
 
-		private void ChooseTwoNewReplacementNodes(
-			out Node<T> newNode1,
-			out Node<T> newNode2)
+		private void ChooseTwoNewReplacementNodes(out Node<T> node1, out Node<T> node2)
 		{
 			/* Uses M_LB_Dist method described in paper. This had the best trade
 			 * off between build time and search time when testing MTree with
 			 * 5,000,000 items.
 			 */
 
-			MTreeObject<T> closestChild = Children[0];
+			MTreeElement<T> closestChild = Children[0];
 			double distToClosestChild = Children[0].DistanceToParent;
 
-			MTreeObject<T> farthestChild = closestChild;
+			MTreeElement<T> farthestChild = closestChild;
 			double distToFarthestChild = distToClosestChild;
 
 			for (int i = 0; i < Children.Count; i++)
@@ -213,11 +211,11 @@ namespace MTree.Models
 			Children.Remove(closestChild);
 			Children.Remove(farthestChild);
 
-			newNode1 = new Node<T>(Tree, Parent, closestChild.Item, -1, false, IsLeaf);
-			newNode1.AddChildToNode(closestChild, 0);
+			node1 = new Node<T>(Tree, Parent, closestChild.Item, -1, false, IsLeaf);
+			node1.AddChildToNode(closestChild, 0);
 
-			newNode2 = new Node<T>(Tree, Parent, farthestChild.Item, -1, false, IsLeaf);
-			newNode2.AddChildToNode(farthestChild, 0);
+			node2 = new Node<T>(Tree, Parent, farthestChild.Item, -1, false, IsLeaf);
+			node2.AddChildToNode(farthestChild, 0);
 		}
 
 		private void PartitionThisNodesChildrenToNewNodes(Node<T> newNode1, Node<T> newNode2)
@@ -334,7 +332,7 @@ namespace MTree.Models
 					{
 						nodesToCheck.Enqueue(Children[i] as Node<T>, dMin);
 
-						/* Original paper had code that inserted null elements into the return list
+						/* Original paper had code that inserted null elements into the queue
 						 * without any explanation. This resulted in odd behavior. Through testing it
 						 * was found that this wasn't necessary for KNN search to work properly.
 						 */

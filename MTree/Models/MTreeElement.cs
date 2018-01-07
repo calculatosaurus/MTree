@@ -2,24 +2,24 @@
 
 namespace MTree.Models
 {
-	internal abstract class MTreeObject<T>
+	internal abstract class MTreeElement<T>
 	{
 		internal T Item { get; }
-        internal double DistanceToParent { set; get; }
+		internal double DistanceToParent { set; get; }
 		internal double CoveringRadius { private set; get; }
-        
-        internal MTreeObject(T item, double distToParent, double coveringRadius)
+
+		internal MTreeElement(T item, double distToParent, double coveringRadius)
         {
             Item = item;
             DistanceToParent = distToParent;
             CoveringRadius = coveringRadius;
         }
 
-        internal void ExpandCoveringRadius(double value)
+		internal void ExpandCoveringRadius(double value)
 		{
 			CoveringRadius = Math.Max(CoveringRadius, value);
 		}
 
-        internal abstract bool Contains(T item);
+		internal abstract bool Contains(T item);
 	}
 }

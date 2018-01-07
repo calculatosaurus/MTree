@@ -16,7 +16,7 @@ namespace MTree
 			Location = new GeoCoordinate(latitude, longitude);
 		}
 
-		public static Func<GeographicPoint, GeographicPoint, double> GetDistance
+		public static Func<GeographicPoint, GeographicPoint, double> HaversineFormula
 			= new Func<GeographicPoint, GeographicPoint, double>(
 				(p1, p2) => p1.Location.GetDistanceTo(p2.Location)
 			);

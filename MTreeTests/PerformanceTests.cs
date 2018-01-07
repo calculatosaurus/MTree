@@ -28,7 +28,7 @@ namespace MTreeTests
 				Console.WriteLine("Maximum node size: " + nodeSize);
 				Console.WriteLine("----------------------------");
 
-				MTree<CartesianPoint> tree = new MTree<CartesianPoint>(CartesianPoint.GetDistance, nodeSize);
+				MTree<CartesianPoint> tree = new MTree<CartesianPoint>(CartesianPoint.PythagoreanTheorem, nodeSize);
 
 				watch.Reset();
 				watch.Start();
@@ -72,7 +72,7 @@ namespace MTreeTests
 				Console.WriteLine("Maximum node size: " + nodeSize);
 				Console.WriteLine("----------------------------");
 
-				MTree<GeographicPoint> tree = new MTree<GeographicPoint>(GeographicPoint.GetDistance, nodeSize);
+				MTree<GeographicPoint> tree = new MTree<GeographicPoint>(GeographicPoint.HaversineFormula, nodeSize);
 
 				watch.Reset();
 				watch.Start();

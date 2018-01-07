@@ -48,7 +48,7 @@ namespace MTreeTests
 			Random rand = new Random();
 			CartesianPoint testPoint = new CartesianPoint(0, 0);
 
-			MTree<CartesianPoint> tree = new MTree<CartesianPoint>(CartesianPoint.GetDistance, maxNodes);
+			MTree<CartesianPoint> tree = new MTree<CartesianPoint>(CartesianPoint.PythagoreanTheorem, maxNodes);
 			List<CartesianPoint> itemsInThreshold = new List<CartesianPoint>();
 
 			CartesianPoint newPoint;
@@ -100,7 +100,7 @@ namespace MTreeTests
 			Random rand = new Random();
 			CartesianPoint testPoint = new CartesianPoint(0, 0);
 
-			MTree<CartesianPoint> tree = new MTree<CartesianPoint>(CartesianPoint.GetDistance);
+			MTree<CartesianPoint> tree = new MTree<CartesianPoint>(CartesianPoint.PythagoreanTheorem);
 			PriorityQueue<CartesianPoint> kNeighbors = new PriorityQueue<CartesianPoint>(k);
 
 			CartesianPoint newPoint;
@@ -148,7 +148,7 @@ namespace MTreeTests
 			int maxNodes = 25;
 			Random rand = new Random();
 
-			MTree<CartesianPoint> tree = new MTree<CartesianPoint>(CartesianPoint.GetDistance, maxNodes);
+			MTree<CartesianPoint> tree = new MTree<CartesianPoint>(CartesianPoint.PythagoreanTheorem, maxNodes);
 
 			CartesianPoint newPoint;
 
@@ -194,7 +194,7 @@ namespace MTreeTests
 
 			double childDist;
 
-			foreach (MTreeObject<CartesianPoint> child in nodeToCheck.Children)
+			foreach (MTreeElement<CartesianPoint> child in nodeToCheck.Children)
 			{
 				childDist = nodeToCheck.Tree.GetDistance(nodeToCheck.Item, child.Item);
 				string errorMsg2 = errorMsg + "\nDistanceToParent: " + child.DistanceToParent + "\nReal Distance: " + childDist + "\nCoveringRadius: " + child.CoveringRadius + "\n";

@@ -114,15 +114,15 @@ namespace MTree
 		/// </summary>
 		/// <returns>A List containing all the items from the MTree within the given radius.</returns>
 		/// <param name="item"></param>
-		/// <param name="radius"></param>
-		public List<T> RangeSearch(T item, double radius)
+		/// <param name="range"></param>
+		public List<T> RangeSearch(T item, double range)
 		{
 			if (Root == null) return null;
 
 			List<T> nearbyItems = new List<T>();
 
 			double distItemToRoot = GetDistance(Root.Item, item);
-			Root.RangeSearch(item, radius, distItemToRoot, nearbyItems);
+			Root.RangeSearch(item, range, distItemToRoot, nearbyItems);
 
 			return nearbyItems;
 		}

@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace MTree
 {
 	public class CartesianPoint
@@ -12,7 +13,7 @@ namespace MTree
 			this.Y = y;
 		}
 
-		public static Func<CartesianPoint, CartesianPoint, double> GetDistance
+		public static Func<CartesianPoint, CartesianPoint, double> PythagoreanTheorem
 			= new Func<CartesianPoint, CartesianPoint, double>((a, b) =>
 		{
 			double xDiff = a.X - b.X;

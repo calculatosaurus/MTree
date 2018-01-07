@@ -34,18 +34,13 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Device" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CartesianPoint.cs" />
     <Compile Include="GeographicPoint.cs" />
     <Compile Include="Models\Entry.cs" />
-    <Compile Include="Models\MTreeObject.cs" />
+    <Compile Include="Models\MTreeElement.cs" />
     <Compile Include="Models\Node.cs" />
     <Compile Include="MTree.cs" />
     <Compile Include="PriorityQueue.cs" />
