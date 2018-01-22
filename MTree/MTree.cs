@@ -45,15 +45,15 @@ namespace MTree
 		public MTree(Func<T, T, double> DistanceFunction)
 			: this(DistanceFunction, 25) { }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="T:MTree.MTree`1"/> class with the given
-        /// maximum node size.
-        /// </summary>
-        /// <param name="DistanceFunction">The distance metric used to determine the "similarity"
-        /// of two item in the MTree.</param>
-        /// <param name="maxNodeSize">The maximum number of items allowed in each node before the
-        /// node is split. </param>
-        public MTree(Func<T, T, double> DistanceFunction, int maxNodeSize)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:MTree.MTree`1"/> class with the given
+		/// maximum node size.
+		/// </summary>
+		/// <param name="DistanceFunction">The distance metric used to determine the "similarity"
+		/// of two item in the MTree.</param>
+		/// <param name="maxNodeSize">The maximum number of items allowed in each node before the
+		/// node is split. </param>
+		public MTree(Func<T, T, double> DistanceFunction, int maxNodeSize)
 		{
 			if (maxNodeSize < 3)
 				throw new ArgumentException(
